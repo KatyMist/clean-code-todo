@@ -3,37 +3,28 @@ const addTaskButton = document.getElementsByTagName('button')[0];
 const todoList = document.getElementById('incompleteTasks');
 const completedList = document.getElementById('completed-tasks');
 
+const createElement = function (tagName, properties) {
+  const element = document.createElement(tagName);
+  Object.assign(element, properties);
+  return element;
+};
+
+const createDeleteButton = function () {
+  const deleteButton = createElement('button', { className: 'delete' });
+  deleteButton.appendChild(createElement('img', { src: './remove.svg' }));
+  return deleteButton;
+};
+
 const createTaskItem = function (taskText) {
   const listItem = document.createElement('li');
-
-  const checkbox = document.createElement('input');
-  const label = document.createElement('label');
-  const editInput = document.createElement('input');
-  const editButton = document.createElement('button');
-
-  const deleteButton = document.createElement('button');
-  const deleteIcon = document.createElement('img');
-
-  // innerText, not innerHTML: the task text is user input and must not be parsed as HTML
-  label.innerText = taskText;
-  label.className = 'task';
-
-  checkbox.type = 'checkbox';
-  editInput.type = 'text';
-  editInput.className = 'task';
-
-  editButton.innerText = 'Edit';
-  editButton.className = 'edit';
-
-  deleteButton.className = 'delete';
-  deleteIcon.src = './remove.svg';
-  deleteButton.appendChild(deleteIcon);
-
-  listItem.appendChild(checkbox);
-  listItem.appendChild(label);
-  listItem.appendChild(editInput);
-  listItem.appendChild(editButton);
-  listItem.appendChild(deleteButton);
+  listItem.append(
+    createElement('input', { type: 'checkbox' }),
+    // innerText, not innerHTML: the task text is user input and must not be parsed as HTML
+    createElement('label', { className: 'task', innerText: taskText }),
+    createElement('input', { type: 'text', className: 'task' }),
+    createElement('button', { className: 'edit', innerText: 'Edit' }),
+    createDeleteButton(),
+  );
   return listItem;
 };
 
@@ -68,9 +59,7 @@ const toggleTaskEdit = function () {
 };
 
 const deleteTask = function () {
-  const listItem = this.parentNode;
-  const list = listItem.parentNode;
-  list.removeChild(listItem);
+  this.parentNode.remove();
 };
 
 const markTaskCompleted = function () {
